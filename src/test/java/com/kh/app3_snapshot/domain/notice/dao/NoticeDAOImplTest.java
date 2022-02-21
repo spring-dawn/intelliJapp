@@ -69,7 +69,6 @@ class NoticeDAOImplTest {
 //    then
     Assertions.assertThat(cnt).isEqualTo(1);
 //    Assertions.assertThat(noticeDAO.selectOne(24L)).isNull();
-
   }
 
   @Test

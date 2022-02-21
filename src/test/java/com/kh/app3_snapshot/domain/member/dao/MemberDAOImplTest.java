@@ -63,7 +63,7 @@ public class MemberDAOImplTest {
         String email = "test2@kh.com";
         memberDAO.deleteMember(email);
 
-        boolean isMember = memberDAO.isMember(email);
+        boolean isMember = memberDAO.exitMember(email);
         Assertions.assertThat(isMember).isFalse();
     }
 

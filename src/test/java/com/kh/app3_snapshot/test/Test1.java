@@ -1,6 +1,7 @@
 package com.kh.app3_snapshot.test;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 public class Test1 {
 
     @Test
+    @Disabled
     void test1(){
         List<String> hobby = new ArrayList<>();
         hobby.add("a");

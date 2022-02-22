@@ -74,11 +74,16 @@ class NoticeDAOImplTest {
   @Test
   @DisplayName("공지사항 전체조회")
   void selectAll() {
-
+//    when
+//    try
     List<Notice> notices = noticeDAO.selectAll();
 
+//    then
     Assertions.assertThat(notices.size()).isEqualTo(3);
     log.info("notices={}", notices);
+    notices.stream().forEach(notice -> {
+      log.info("cdate={}", notice.getCdate());
+    });
   }
 
   @Test

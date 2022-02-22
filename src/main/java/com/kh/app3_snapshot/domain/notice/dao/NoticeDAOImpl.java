@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoticeDAOImpl implements NoticeDAO {
 
-//  @RequiredArgsConstructor를 사용하면 생성자 자동 생성.
+//  @RequiredArgsConstructor를 사용하면 생성자 자동 생성. DB와 연동시켜주는 메소드
   private final JdbcTemplate jdbcTemplate;
 //   어노테이션 없으면 아래처럼 작성해줘야 함.
 //  public NoticeDAOImpl(JdbcTemplate jdbcTemplate){

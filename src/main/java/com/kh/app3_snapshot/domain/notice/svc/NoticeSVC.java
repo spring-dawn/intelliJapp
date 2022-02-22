@@ -24,6 +24,4 @@ public interface NoticeSVC {
   //  조회수 증가
   int increaseHit(Long noticeId);
 
-
-
 }

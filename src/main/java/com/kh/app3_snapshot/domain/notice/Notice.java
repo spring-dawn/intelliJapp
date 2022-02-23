@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class Notice {
+//  엔터티 객체?
 //  데이터 나르기 객체. Data Transfer Object DTO. 이런 거였구나...는 멤버 필드잖아.
 //  DB에서 정해둔 타입을 퍼와서 자바와 자료 타입을 맞춰준다.
 

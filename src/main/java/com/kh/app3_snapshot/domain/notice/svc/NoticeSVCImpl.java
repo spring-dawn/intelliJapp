@@ -15,7 +15,6 @@ public class NoticeSVCImpl implements NoticeSVC {
 //    SVC는 사용자의 입력값을 받으면 컨트롤러를 통해 DAO에 전달해주는 역할
     private final NoticeDAO noticeDAO;
 
-    
     /**
      * 등록
      * @param notice

@@ -27,7 +27,7 @@ public class NoticeController {
   private final NoticeSVC noticeSVC;
 
   //  등록화면 GET /notices/add
-  @GetMapping("/add")
+  @GetMapping("")
   public String addForm(@ModelAttribute AddForm addForm) {
     log.info("NoticeController.addForm() 호출");
     return "notice/addForm";    //뷰(화면) 이름.
@@ -41,10 +41,9 @@ public class NoticeController {
 //  }
 
   //  등록처리 POST /notices/add
-  @PostMapping("/add")
+  @PostMapping("")
   public String add(
       @ModelAttribute AddForm addForm,
-      Model model,
       RedirectAttributes redirectAttributes) {
     log.info("NoticeController.add() 호출");
     log.info("AddForm={}", addForm);
@@ -56,22 +55,22 @@ public class NoticeController {
     notice.setAuthor(addForm.getAuthor());
 
     Notice writtenNotice= noticeSVC.write(notice);
+    redirectAttributes.addAttribute("noticeId",writtenNotice.getNoticeId());
 
-//    입력된 내용을 model에 담아(바인딩) 상세 페이지에 똑같이 기록
-    DetailForm detailForm = new DetailForm();
-    detailForm.setSubject(writtenNotice.getSubject());
-    detailForm.setContent(writtenNotice.getContent());
-    detailForm.setAuthor(writtenNotice.getAuthor());
+//    입력된 내용을 model에 담아(바인딩) 상세 페이지에 똑같이 기록. 등록이 안 돼서 잠시 주석처리.
+//    DetailForm detailForm = new DetailForm();
+//    detailForm.setSubject(writtenNotice.getSubject());
+//    detailForm.setContent(writtenNotice.getContent());
+//    detailForm.setAuthor(writtenNotice.getAuthor());
+//
+//    model.addAttribute("detailForm", detailForm);
+//    redirectAttributes.addAttribute("noticeId", writtenNotice.getNoticeId());
 
-    model.addAttribute("detailForm", detailForm);
-    redirectAttributes.addAttribute("noticeId", writtenNotice.getNoticeId());
-
-
-    return "redirect:/notices/{noticeId}";  //    http://서버:9080/notices/공지사항번호
+    return "redirect:/notices/{noticeId}/detail";  //    http://서버:9080/notices/공지사항번호
   }
 
   // 상세화면  GET /notices/{noticeId}
-  @GetMapping("/{noticeId}")
+  @GetMapping("/{noticeId}/detail")
   public String detailForm(@PathVariable Long noticeId, Model model) {
 
     Notice notice = noticeSVC.findByNoticeId(noticeId);
@@ -85,10 +84,12 @@ public class NoticeController {
     model.addAttribute("detailForm", detailForm);
 
     return "notice/detailForm";
+//    상세페이지 확인할 때마다 조회수 갱신 필요
+
   }
 
   // 수정화면 GET /notices/{noticeId}/edit
-  @GetMapping("/{noticeId}/edit")
+  @GetMapping("/{noticeId}")
   public String editForm(@PathVariable Long noticeId, Model model) {
 
     Notice notice = noticeSVC.findByNoticeId(noticeId);
@@ -105,7 +106,7 @@ public class NoticeController {
   }
 
   // 수정처리  POST /notices/{noticeId}/edit
-  @PostMapping("/{noticeId}/edit")
+  @PatchMapping("/{noticeId}/")
   public String edit(
       @ModelAttribute EditForm editForm,
       @PathVariable Long noticeId,
@@ -121,25 +122,25 @@ public class NoticeController {
 
     redirectAttributes.addAttribute("noticeId", modifiedNotice.getNoticeId());
 
-    return "redirect:/notices/{noticeId}";    //뷰 아니고 url. 리다이렉트의 경우엔 다르다.
+    return "redirect:/notices/{noticeId}/detail";    //뷰 아니고 url. 리다이렉트의 경우엔 다르다.
   }
 
   // 삭제처리  GET /notices/{noticeId}/del
-  @GetMapping("/{noticeId}/del")
+  @DeleteMapping("/{noticeId}")
   public String del(@PathVariable Long noticeId) {
 
     noticeSVC.remove(noticeId);
 
-    return "redirect:/notices";
+    return "redirect:/notices/all";
   }
 
 //  전체목록 GET /notices
-  @GetMapping("")
+  @GetMapping("/all")
   public String list(Model model){
 
     List<Notice> list = noticeSVC.findAll();
 
-//    이거 이터레이터 아니냐
+//    이거 이터레이터 아니냐(iter 까지 치고 엔터)
     List<Item> notices = new ArrayList<>();
     for (Notice notice : list) {
 

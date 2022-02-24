@@ -5,12 +5,14 @@ import com.kh.app3_snapshot.domain.notice.dao.NoticeDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service       //서비스 레이어
 @RequiredArgsConstructor
+@Transactional
 public class NoticeSVCImpl implements NoticeSVC {
 //    SVC는 사용자의 입력값을 받으면 컨트롤러를 통해 DAO에 전달해주는 역할
     private final NoticeDAO noticeDAO;
@@ -41,7 +43,10 @@ public class NoticeSVCImpl implements NoticeSVC {
      */
     @Override
     public Notice findByNoticeId(Long noticeId) {
-        return noticeDAO.selectOne(noticeId);
+        noticeDAO.updateHit(noticeId);
+        Notice notice = noticeDAO.selectOne(noticeId);
+
+        return notice;
     }
 
     /**

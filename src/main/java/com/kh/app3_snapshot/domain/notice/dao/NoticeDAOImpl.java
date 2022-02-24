@@ -79,6 +79,7 @@ public class NoticeDAOImpl implements NoticeDAO {
 
     sql.append(" select notice_id, subject, content, author, hit, cdate, udate ");
     sql.append(" from notice ");
+    sql.append(" order by cdate desc ");
 
     List<Notice> list = jdbcTemplate.query(
         sql.toString(),

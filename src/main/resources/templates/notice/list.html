@@ -33,11 +33,13 @@
         <div class="col">작성시간</div>
         <div class="col">조회수</div>
 
-<!--        each반복문으로 하나:전체. 전체에서 하나씩 꺼냄 -->
-        <th:block th:each="item : ${notices}">
+<!--        each반복문으로 하나:전체. 전체에서 하나씩 꺼냄. itemStat은 자동으로 만들어지는데 인덱스 정보가 있다. 순서대로 세우면 인덱스 순서대로 정렬됨 -->
+<!--        itemStat.count로 돌리면 1부터 시작한다. 사이즈에서 인덱스 순서대로 빼면 내림차순으로 보이긴 함. 테이블상 정보는 달라지지 않아 오차가 생긴다-->
+        <th:block th:each="item, itemStat : ${notices}">
           <div class="col" th:text="${item.noticeId}">1</div>
+<!--          <div class="col" th:text="${itemStat.size-item.index}">1</div>-->
           <div class="col" >
-            <a href="" th:href="@{|/notices/${item.noticeId}|}" th:text="${item.subject}"></a></div>
+            <a href="" th:href="@{|/notices/${item.noticeId}/detail|}" th:text="${item.subject}"></a></div>
           <div class="col" th:text="${item.cdate}">2022/02/22</div>
           <div class="col" th:text="${item.ctime}">2022/02/22</div>
           <div class="col" th:text="${item.hit}">10</div>
@@ -80,8 +82,8 @@
   <script>
     const $writeBtn = document.getElementById('writeBtn');
     $writeBtn.addEventListener('click',()=>{
-    const url = `/notices/addForm`;
-    location.href = url;
+      const url = `/notices`;
+      location.href = url
     });
   </script>
 </body>

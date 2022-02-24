@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--페이지 전체를 프래그먼트로 사용-->
+<html th:fragment="layout(f)"
+      lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초기화면</title>
+  <style>
+    div{ outline: 1px red solid; }
+
+    .container{
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 50px 100px 50px auto auto;
+      }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="item">upm</div>
+    <div class="item">header</div>
+    <div class="item">gnb</div>
+    <div class="item">main</div>
+    <div class="item" th:insert="${f}">footer</div>
+  </div>
+
+
+</body>
+</html>

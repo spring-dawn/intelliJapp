@@ -85,12 +85,11 @@ public class NoticeController {
 
     return "notice/detailForm";
 //    상세페이지 확인할 때마다 조회수 갱신 필요
-
   }
 
   // 수정화면 GET /notices/{noticeId}/edit
   @GetMapping("/{noticeId}")
-  public String editForm(@PathVariable Long noticeId, Model model) {
+  public String editForm(@PathVariable Long noticeId, Model model){
 
     Notice notice = noticeSVC.findByNoticeId(noticeId);
 
@@ -105,12 +104,13 @@ public class NoticeController {
     return "notice/editForm";
   }
 
-  // 수정처리  POST /notices/{noticeId}/edit
-  @PatchMapping("/{noticeId}/")
+  // 수정처리
+  @PatchMapping("/{noticeId}")
   public String edit(
       @ModelAttribute EditForm editForm,
       @PathVariable Long noticeId,
-      RedirectAttributes redirectAttributes) {
+      RedirectAttributes redirectAttributes
+  ){
 
     Notice notice = new Notice();
     notice.setNoticeId(noticeId);

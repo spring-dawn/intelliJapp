@@ -14,7 +14,8 @@
     <div class="content">
       <h3>공지사항 수정</h3>
       <hr>
-      <form th:action th:method="" th:object="${editForm}" th:data-notice-id="*{noticeId}">
+      <form th:action th:method="patch" th:object="${editForm}"
+            th:data-notice-id="*{noticeId}">
         <input type="hidden" th:field="*{noticeId}">
         <ul>
           <li>
@@ -45,15 +46,13 @@
       const $form = e.target.closest('form');
       const noticeId = $form.dataset.noticeId;
       $form.action = `/notices/${noticeId}`;
-      $form.method = 'patch';
       $form.submit();
     });
-
     $cancelBtn.addEventListener('click', e=>{
-     const $form = e.target.closest('form');
-     const noticeId = $form.dataset.noticeId;
-     const url = `/notices/${noticeId}/detail`;
-     location.href= url;
+      const $form = e.target.closest('form');
+      const noticeId = $form.dataset.noticeId;
+      const url = `/notices/${noticeId}/detail`;
+      location.href = url;
     });
   </script>
 </body>

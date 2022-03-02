@@ -36,19 +36,18 @@
       xhr.send(nickname.value);
 
       //서버 응답처리
-      xhr.addEventListener('load', e=>{
+      xhr.addEventListener('load', e => {
         //console.log(xhr);
         if(xhr.status === 200){
           //console.log(xhr.response);
           const obj = JSON.parse(xhr.response);    //json포맷의 문자열 => js객체로 변환
           if(obj.rtcd === '00'){
-            findedEmail.textContext = obj.data;
+            findedEmail.textContent = obj.data;
           }else {
-            findedEmail.textContext = obj.data;
+            findedEmail.textContent = obj.data;
           }
-
         }else{
-          console.log('Error', xhr.status, xhr.statusText);
+          console.err('Error', xhr.status, xhr.statusText);
         }
       });
     }

@@ -106,7 +106,16 @@ public class MemberSVCImpl implements MemberSVC{
      */
     @Override
     public boolean isMember(String email, String passwd) {
-
         return memberDAO.isMember(email, passwd);
+    }
+
+    /**
+     * 별칭으로 아이디 찾기
+     * @param nickname
+     * @return
+     */
+    @Override
+    public String findEmailByNickname(String nickname) {
+        return memberDAO.findEmailByNickname(nickname);
     }
 }

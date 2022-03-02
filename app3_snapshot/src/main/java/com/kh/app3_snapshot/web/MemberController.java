@@ -281,4 +281,14 @@ public class MemberController {
         return "member/mypage";
     }
 
+    //아이디찾기
+    @GetMapping("/findEmail")
+    public String findEmail(){
+
+        return "member/findEmail";
+    }
+
+
+
+
 }

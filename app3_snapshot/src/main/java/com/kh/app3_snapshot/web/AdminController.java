@@ -76,6 +76,13 @@ public class AdminController {
 
         return "admin/member/members";
     }
+//    같은 회원전체조회인데 비동기 방식 사용
+    @GetMapping("/apimembers")
+    public String apiMembers(){
+
+        return "admin/member/apimembers";
+    }
+
 
     //회원개별조회
     @GetMapping("/members/{email}")

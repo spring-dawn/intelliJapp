@@ -20,21 +20,24 @@ public class MemberDAOImplTest {
 
     @Test       // 테스트 대상
     @DisplayName("등록") //테스트케이스 이름
-    @Disabled  //테스트 대상에서 제외
-    void insert(){
-        Member member = new Member("test3@kh.com","1234","테스터abc");
+    @Disabled
+        //테스트 대상에서 제외
+    void insert() {
+        Member member = new Member("test3@kh.com", "1234", "테스터abc");
         Member savedMember = memberDAO.insertMember(member);
 //    log.info("savedMember.getEmail={}",savedMember.getEmail());
 //    log.info("savedMember.getPasswd={}",savedMember.getPasswd());
 //    log.info("savedMember.getNickName={}",savedMember.getNickname());
         savedMember.setMemberId(null);
         Assertions.assertThat(savedMember).usingRecursiveComparison().isEqualTo(member);
-    };
+    }
+
+    ;
 
     @Test
     @DisplayName("조회")
     @Disabled
-    void selectByMemberId(){
+    void selectByMemberId() {
         Long memberId = 106L;
         Member member = memberDAO.selectMemberByMemberId(memberId);
         log.info("member={}", member);
@@ -43,7 +46,7 @@ public class MemberDAOImplTest {
 
     @Test
     @DisplayName("수정")
-    void updateMember(){
+    void updateMember() {
 
         String email = "test3@kh.com";
         String nickname = "테스터3";
@@ -53,13 +56,14 @@ public class MemberDAOImplTest {
 
         Member updatedMember = memberDAO.selectMemberByEmail(email);
 
-        log.info("updatedMember.nickname={}",nickname);
+        log.info("updatedMember.nickname={}", nickname);
         Assertions.assertThat(updatedMember.getNickname()).isEqualTo(nickname);
 
     }
+
     @Test
     @DisplayName("탈퇴")
-    void outMember(){
+    void outMember() {
         String email = "test2@kh.com";
         memberDAO.deleteMember(email);
 
@@ -69,7 +73,7 @@ public class MemberDAOImplTest {
 
     @Test
     @DisplayName("전체조회")
-    void selectAll(){
+    void selectAll() {
 
         List<Member> members = memberDAO.selectAll();
         //log.info("members={}", members);
@@ -78,7 +82,7 @@ public class MemberDAOImplTest {
 
     @Test
     @DisplayName("로그인")
-    void login(){
+    void login() {
 
         String email = "test1@kh.com";
         String passwd = "1234";
@@ -86,6 +90,24 @@ public class MemberDAOImplTest {
         Member member = memberDAO.login(email, passwd);
 
         Assertions.assertThat(member).isNotNull();
+    }
+
+    @Test
+    @DisplayName("이메일찾기by별칭")
+    void findEmailByNickname(){
+        String nickname = "테스터1";
+        String findedEmail = memberDAO.findEmailByNickname(nickname);
+
+        Assertions.assertThat(findedEmail).isEqualTo("test1@kh.com");
 
     }
+
+
+
+
+
+
+
+
+
 }

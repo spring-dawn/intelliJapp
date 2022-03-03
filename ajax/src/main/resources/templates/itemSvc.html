@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <form action="">
+    <p>상품명 <input type="text" id="name"></p>
+    <p>브랜드 <input type="text" id="brand"></p>
+    <p>상품설명 <textarea id="desc" cols="10" rows="3"></textarea></p>
+    <p>가격 <input type="text" id="price"></p>
+
+
+  </form>
+
+  <div><button id="createBtn">등록</button></div>
+  <div><button id="listBtn">목록</button></div>
+  <div><input type="text" id="detailItemId"><button id="detailBtn">조회</button></div>
+  <div><input type="text" id="itemId"><button id="delBtn">삭제</button></div>
+
+
+<script>
+
+    createBtn.addEventListener('click', create_f);
+    listBtn.addEventListener('click', list_f);
+    detailBtn.addEventListener('click', detail_f);
+    delBtn.addEventListener('click', del_f);
+
+    const payload = {
+                      name: "모니터",
+                      brand: "삼성",
+                      desc: "삼성모니터40인치",
+                      price: 400000
+    };
+
+    console.log(payload);
+
+    //상품등록
+    function create_f(e){
+      //유동적으로 데이터를 날라줄 빈 객체 생성
+      const data = {};
+      data.name = name.value;
+      data.brand = brand.value;
+      data.desc = desc.value;
+      data.price = price.value;
+
+      fetch('/api/items',{
+        method:'POST',
+        headers: { 'Content-Type':'application/json'},
+        body: JSON.stringify(payload)  // js객체 => json포맷 문자열 변환
+      }).then(res=>res.json())         // json포맷 문자열 => js객체 변환
+        .then(res=>{console.log(res)})
+        .catch(err=>{console.error('Err:',err)});
+      console.log('after fetch');
+    }
+
+    //상품목록
+    function list_f(e){
+      fetch('/api/items', {
+        method: 'GET'
+      }).than(res => res.json())
+        .than(res => console.log(res))
+        .catch(err=>{console.error('Err:', err)})
+
+    }
+
+    //상품상세
+    function detail_f(e){
+       const url = `/api/items/${detailItemId.value}`;
+       fetch(url,{
+        method:'GET',
+      }).then(res=>res.json())         // json포맷 문자열 => js객체 변환
+        .then(res=>{console.log(res)})
+        .catch(err=>{console.error('Err:',err)});
+    }
+
+    //상품삭제
+     function del_f(e){
+       const url = `/api/items/${detailItemId.value}`;
+       fetch(url,{
+        method:'DELETE',
+      }).then(res=>res.json())         // json포맷 문자열 => js객체 변환
+        .then(res=>{console.log(res)})
+        .catch(err=>{console.error('Err:',err)});
+    }
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>

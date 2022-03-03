@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 public class ApiItemController {
 
 //  DAO를 싱글톤으로 만들었으니 Impl 쪽에서 겟인스턴스로 가져온다

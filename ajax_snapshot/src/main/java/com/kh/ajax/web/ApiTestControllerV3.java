@@ -1,0 +1,117 @@
+package com.kh.ajax.web;
+
+import com.kh.ajax.web.api.Person;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.*;
+
+@Slf4j
+@Controller
+@RequestMapping("/api/v3")
+public class ApiTestControllerV3 {
+
+  //  @ResponseBody
+  @GetMapping("/t1")
+  public ResponseEntity<String> test1() {
+    ResponseEntity<String> responseEntity = new ResponseEntity<>("hello", HttpStatus.OK);
+
+    return responseEntity;
+  }
+
+//  @ResponseBody
+  @GetMapping("/t2")
+  public ResponseEntity<String> test2() {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Content-Type", "text/html");
+
+     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                          .headers(headers)
+                          .body("<h3>Hello</h3>");
+  }
+
+//  @ResponseBody
+  @GetMapping("/t3")
+  public ResponseEntity<Person> test3() {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Content-Type", "application/json");
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .headers(headers)
+        .body(new Person("홍길동", 30));
+
+  }
+
+//  @ResponseBody
+  @GetMapping("/t4")
+  public List<Person> test4() {
+
+    List<Person> list = new ArrayList<>();
+    list.add(new Person("홍길동1", 10));
+    list.add(new Person("홍길동2", 20));
+    list.add(new Person("홍길동3", 30));
+
+    return list;
+  }
+
+//  @ResponseBody
+  @GetMapping("/t5")
+  public Map<String, Person> test5() {
+//    이번엔 맵 생성. 맵은 K:V의 구성
+    Map map = new HashMap();
+    map.put("1", new Person("홍길동1", 10));
+    map.put("2", new Person("홍길동2", 20));
+    map.put("3", new Person("홍길동3", 30));
+
+    return map;
+  }
+
+//  어레이리스트, 맵, 셋 전부 구성이 조금씩 다르네
+//  @ResponseBody
+//  @GetMapping("/t6")
+//  public Set<Person> test6() {
+//
+////    셋의 특이점: 순서가 정해져있지 않다 정리 안 된 배열.
+//    Set<Person> set = new HashSet<>();
+//    set.add(new Person("홍길동1", 10));
+//    set.add(new Person("홍길동2", 20));
+//    set.add(new Person("홍길동3", 30));
+//
+//    return set;
+//  }
+
+  //  타입을 Object로 변환?
+//  @ResponseBody
+  @GetMapping("/t6")
+  public Object test6() {
+
+    Set<Person> set = new HashSet<>();
+    set.add(new Person("홍길동1", 10));
+    set.add(new Person("홍길동2", 20));
+    set.add(new Person("홍길동3", 30));
+
+    return new Result<>(set);
+  }
+
+  static class Result<T> {
+    T data;
+
+    Result(T o) {
+      this.data = o;
+    }
+
+    //    게터가 없으면 결과를 못 본다
+    public T getData() {
+      return data;
+    }
+  }
+}

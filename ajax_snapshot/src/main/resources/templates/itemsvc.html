@@ -10,7 +10,7 @@
 
 <body>
 <form action="">
-  <p>상품명 <input type="text" id="name"></p>
+  <p>상품명 <input type="text" id="pname"></p>
   <p>브랜드 <input type="text" id="brand"></p>
   <p>상품설명 <textarea id="desc" cols="10" rows="3"></textarea></p>
   <p>가격 <input type="text" id="price"></p>
@@ -19,16 +19,17 @@
 <div><button id="createBtn">등록</button></div>
 <div><button id="listBtn">목록</button></div>
 <div><input type="text" id="detailItemId"><button id="detailBtn">조회</button></div>
-<div><input type="text" id="delItemId"><button id="delBtn">삭제</button></div>
+<!-- <div><input type="text" id="delItemId"><button id="delBtn">삭제</button></div> -->
+<div id="itemList">상품목록</div>
 
 <script>
-    createBtn.addEventListener('click',create_f);
-    listBtn.addEventListener('click',list_f);
-    detailBtn.addEventListener('click',detail_f);
-    delBtn.addEventListener('click',del_f);
+    createBtn.addEventListener('click', create_f);
+    listBtn.addEventListener('click', list_f);
+    detailBtn.addEventListener('click', detail_f);
+    // delBtn.addEventListener('click', del_f);
 
     const payload = {
-                      name: "모니터",
+                      pname: "모니터",
                       brand: "삼성",
                       desc: "삼성모니터40인치",
                       price: 400000
@@ -39,9 +40,9 @@
     //상품등록
     function create_f(e){
       const data = {};
-      data.name = name.value;
+      data.name = pname.value;
       data.brand = brand.value;
-      data.desd = desc.value;
+      data.desc = desc.value;
       data.price = price.value;
 
 
@@ -50,19 +51,47 @@
         headers: { 'Content-Type':'application/json'},
         body: JSON.stringify(data)  // js객체 => json포맷 문자열 변환
       }).then(res=>res.json())         // json포맷 문자열 => js객체 변환
-        .then(res=>{console.log(res)})
+        .then(res=>{console.log(res); list_f(); })
         .catch(err=>{console.error('Err:',err)});
       console.log('after fetch');
     }
 
-    //상품목록
+    //상품목록 가져오기
     function list_f(e){
+
       fetch('/api/items',{
         method:'GET'
       }).then(res=>res.json())
-        .then(res=>console.log(res))
+        .then(res=>printItemList(res))
         .catch(err=>{console.error('Err:',err)});
     }
+
+    // 상품목록 출력
+    function printItemList(res){
+        console.log(res);
+
+        let html = '';
+            if(res.rtcd === '00'){     //목록이 있음
+                res.data.forEach(item =>{
+                   html += `<p>`;
+                   html += `
+                   상품ID:${item.id},
+                   상품명:${item.name},
+                   브랜드명:${item.brand},
+                   상품설명:${item.desc},
+                   가격:${item.price}
+                   `
+                   html+= `<button data-item-id='${item.id}' onclick='del_f(event)'>삭제</button>`;
+                   html+= `</p>`
+                });
+            }else if(res.rtcd === '02'){     //출력할 목록이 없음
+                html = '';
+            }else{
+                alert(res,rtmsg);
+            }
+                itemList.innerHTML = html;
+    }
+
 
     //상품상세
     function detail_f(e){
@@ -76,11 +105,11 @@
 
     //상품삭제
     function del_f(e){
-      const url = `/api/items/${delItemId.value}`;
+      const url = `/api/items/${e.target.dataset.itemId}`;
       fetch(url,{
         method:'DELETE'
       }).then(res=>res.json())
-        .then(res=>console.log(res))
+        .then(res=>{console.log(res); list_f()})
         .catch(err=>{console.error('Err:',err)});
     }
 

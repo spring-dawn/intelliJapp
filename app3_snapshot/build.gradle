@@ -34,6 +34,10 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.20'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+	//	XML임포트용 잭슨 어쩌구 임포트
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml
+	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml'
+
 
 }
 

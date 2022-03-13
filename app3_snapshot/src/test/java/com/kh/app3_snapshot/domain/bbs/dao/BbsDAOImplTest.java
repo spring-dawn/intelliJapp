@@ -1,6 +1,5 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -50,9 +47,9 @@ class BbsDAOImplTest {
     @Test
     @DisplayName("게시글 단건 조회")
     void findByBbsId() {
-        Long bbsId = 3L;
+        Long bbsId = 2L;
         Bbs findedBbsItem = bbsDAO.findByBbsId(bbsId);
-        Assertions.assertThat(findedBbsItem.getTitle()).isEqualTo("제목1");
+        Assertions.assertThat(findedBbsItem.getTitle()).isEqualTo("가나다라");
     }
 
     @Test

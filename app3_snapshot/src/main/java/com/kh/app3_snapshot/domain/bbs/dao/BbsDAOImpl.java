@@ -25,7 +25,7 @@ public class BbsDAOImpl implements BbsDAO {
     private final JdbcTemplate jdbcTemplate;
 
     /**
-     * 원글 등록. Notice에서 코드 덮어씀.
+     * 원글 등록.
      * @param bbs 
      * @return
      */
@@ -92,8 +92,8 @@ public class BbsDAOImpl implements BbsDAO {
         StringBuffer sql = new StringBuffer();
 
         sql.append( "select bbs_id, bcategory, title, email, nickname, hit, bcontent, pbbs_id, bgroup, STEP, bindent, status, cdate, udate " );
-        sql.append( "from bbs" );
-        sql.append( "where bbs_id = ?" );
+        sql.append( "from bbs " );
+        sql.append( "where bbs_id = ? " );
 
         Bbs bbsItem = null;
         try {
@@ -150,18 +150,125 @@ public class BbsDAOImpl implements BbsDAO {
         return updatedItemCount;
     }
 
+    /**
+     * 답글 작성
+     * @param pbbsId   상위 게시글 번호
+     * @param replyBbs 답글
+     * @return
+     */
     @Override
-    public Long saverReply(Bbs bbs) {
-        return null;
+    public Long saverReply(Long pbbsId, Bbs replyBbs) {
+
+//       상위글의 정보를 우선 반영하고 필요한 만큼 업데이트
+       Bbs bbs = addInfoOfParentToChild(pbbsId, replyBbs);
+
+//       세팅 된 답글을 등록(insert). 등록은 원글과 비슷.
+        StringBuffer sql = new StringBuffer();
+        sql.append( "insert into bbs (bbs_id, bcategory, title, email, nickname, bcontent, pbbs_id, bgroup, step, bindent )" );
+        sql.append( "values( bbs_bbs_id_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ? )" );
+
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement pstmt = con.prepareStatement(
+                    sql.toString(),
+                    new String[]{"bbs_id"}    //insert 실행 후에 그 중 반환할 컬럼명. keyholder가 받아준다.
+                );
+//              각 값을 매칭
+                pstmt.setString(1, bbs.getBcategory());
+                pstmt.setString(2, bbs.getTitle());
+                pstmt.setString(3, bbs.getEmail());
+                pstmt.setString(4, bbs.getNickname());
+                pstmt.setString(5, bbs.getBcontent());
+                pstmt.setLong(6, bbs.getPbbsId());
+                pstmt.setLong(7, bbs.getBgroup());
+                pstmt.setInt(8, bbs.getStep());
+                pstmt.setInt(9, bbs.getBindent());
+
+                return pstmt;
+            }
+        }, keyHolder);
+
+        return Long.valueOf(keyHolder.getKeys().get("bbs_id").toString());
     }
 
-    @Override
-    public int hitCount(Long id) {
-        return 0;
+//    답글에 상위글 정보 반영할 메소드
+    private Bbs addInfoOfParentToChild(Long pbbsId, Bbs replyBbs) {
+//        답글을 달려는 상위글의 정보
+        Bbs bbs = findByBbsId(pbbsId);
+
+//        상위글의 카테고리 똑같이 가져오기
+        replyBbs.setBcategory(bbs.getBcategory());
+
+//        bgroup 로직
+//        답글의 bgroup = 상위글의 bgroup
+        replyBbs.setBgroup(bbs.getBgroup());
+
+        //        step 로직
+        int affectedRows = updateBstep(bbs);
+//        답글의 bstep 값은 상위글이 bstep +1
+        replyBbs.setStep(bbs.getStep() + 1);
+
+//        bindent 로직
+//        답글의 들여쓰기 = 상위글의 들여쓰기 +1
+        replyBbs.setBindent(bbs.getBindent() + 1);
+
+        replyBbs.setPbbsId(pbbsId);
+        return replyBbs;
     }
 
+//    상위글과 동일한 그룹 step 반영하는 메소드
+    private int updateBstep(Bbs bbs) {
+//        step 로직
+//        1) 상위글의 bgroup값과 동일한 게시글 중 상위글의 step 보다 큰 게시글의 step 을 1씩 증가.
+//        2) 답글의 step 값은 상위글의 step 값+1
+        StringBuffer sql = new StringBuffer();
+        sql.append(" update bbs ");
+        sql.append(" set step = step + 1 ");
+        sql.append(" where bgroup = ? ");
+        sql.append(" and bstep > ? ");
+
+        int affectedRows = jdbcTemplate.update(sql.toString(), bbs.getBgroup(), bbs.getStep());
+
+        return affectedRows;
+    }
+
+    /**
+     * 조회수 증가
+     * @param id 게시글 번호
+     * @return 변경된 조회수
+     */
+    @Override
+    public int increaseHitCount(Long id) {
+        StringBuffer sql = new StringBuffer();
+
+        sql.append(" update bbs ");
+        sql.append("    set hit = hit+1 ");
+        sql.append(" where bbs_id = ? ");
+
+        int affectedRows = jdbcTemplate.update(sql.toString(), id);
+
+        return affectedRows;
+//    결과가 제대로 나온다면 cnt값이 1이 나와야 함
+    }
+
+    /**
+     * 전체 게시물 수
+     * @return db에 저장돼있는 게시글 전체 건수
+     */
     @Override
     public int totalCount() {
-        return 0;
+//        그냥 게시물 다 세면 되는 거 아냐? 반환이 리스트도 아니고 그냥 숫자니까..
+//        sql문이 단순하면 그냥 스트링 변수 써도 좋다. 근데 그럼 스트링버퍼는 왜 쓰는 거지?
+        String sql = "select count(*) from bbs";
+
+//       결과 나왔으면 jdbc로 매핑해야하는데 뭘 써야 하지? > 단일 결과는 쿼리포오브젝트. 다수 결과면 쿼리()에서 로우매퍼 쓰는 구나.
+        Integer cnt = jdbcTemplate.queryForObject(sql, Integer.class);
+
+        return cnt;
+
+
     }
 }

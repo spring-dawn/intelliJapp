@@ -1,11 +1,13 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
+import com.kh.app3_snapshot.domain.notice.Notice;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
@@ -28,8 +30,23 @@ class BbsDAOImplTest {
         bbs.setBcontent("본문1");
 
         Long saveOriginId = bbsDAO.saveOrigin(bbs);
-        Assertions.assertThat(saveOriginId).isEqualTo(4);
+        Assertions.assertThat(saveOriginId).isEqualTo(1);
         log.info("saveOriginId={}", saveOriginId);
+    }
+
+    @Test
+    @DisplayName("답글 작성")
+    void saverReply(){
+        Long pbbsId = 1L;
+
+        Bbs bbs = new Bbs();
+        bbs.setBcategory("B0101");
+        bbs.setTitle("제목1-1");
+        bbs.setEmail("test2@kh.com");
+        bbs.setNickname("테스터2");
+        bbs.setBcontent("본문1-1");
+
+        bbsDAO.saverReply(pbbsId, bbs);
     }
 
     @Test
@@ -49,13 +66,14 @@ class BbsDAOImplTest {
     void findByBbsId() {
         Long bbsId = 2L;
         Bbs findedBbsItem = bbsDAO.findByBbsId(bbsId);
-        Assertions.assertThat(findedBbsItem.getTitle()).isEqualTo("가나다라");
+        log.info("findedBbsItem={}",findedBbsItem);
+        Assertions.assertThat(findedBbsItem.getBbsId()).isEqualTo(bbsId);
     }
 
     @Test
     @DisplayName("게시글 단건 삭제")
     void deleteByBbsId() {
-        Long bbsId = 3L;
+        Long bbsId = 2L;
         int deletedBbsItemCount = bbsDAO.deleteByBbsId(bbsId);
 
         Assertions.assertThat(deletedBbsItemCount).isEqualTo(1);
@@ -89,7 +107,42 @@ class BbsDAOImplTest {
         Assertions.assertThat(beforeUpdatingItem.getUdate())
                 .isNotEqualTo(afterUpdatingItem.getUdate());
     }
+
+    @Test
+    @DisplayName("조회수 증가")
+    void increaseHitCount(){
+        Long bbsId = 1L;
+//        조회 전 조회수
+        int beforeHitCount = bbsDAO.findByBbsId(bbsId).getHit();
+//        조회(클릭)
+        bbsDAO.increaseHitCount(1L);
+//        조회 후 조회수
+        int afterHitCount = bbsDAO.findByBbsId(bbsId).getHit();
+//        조회 후 조회수 - 조회 전 조회수 = 1
+        Assertions.assertThat(afterHitCount-beforeHitCount).isEqualTo(1);
+
+
+    }
+
+    @Test
+    @DisplayName("전체 게시물 개수")
+    void totalCount() {
+
+        int size = bbsDAO.findAll().size();
+        int i = bbsDAO.totalCount();
+
+        Assertions.assertThat(i).isEqualTo(size);
+    }
+
+
+
 }
+
+
+
+
+
+
 
 
 

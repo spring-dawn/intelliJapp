@@ -1,13 +1,11 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
-import com.kh.app3_snapshot.domain.notice.Notice;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
@@ -30,14 +28,14 @@ class BbsDAOImplTest {
         bbs.setBcontent("본문1");
 
         Long saveOriginId = bbsDAO.saveOrigin(bbs);
-        Assertions.assertThat(saveOriginId).isEqualTo(1);
+        Assertions.assertThat(saveOriginId).isEqualTo(22);
         log.info("saveOriginId={}", saveOriginId);
     }
 
     @Test
     @DisplayName("답글 작성")
     void saverReply(){
-        Long pbbsId = 1L;
+        Long pbbsId = 22L;
 
         Bbs bbs = new Bbs();
         bbs.setBcategory("B0101");
@@ -64,7 +62,7 @@ class BbsDAOImplTest {
     @Test
     @DisplayName("게시글 단건 조회")
     void findByBbsId() {
-        Long bbsId = 2L;
+        Long bbsId = 22L;
         Bbs findedBbsItem = bbsDAO.findByBbsId(bbsId);
         log.info("findedBbsItem={}",findedBbsItem);
         Assertions.assertThat(findedBbsItem.getBbsId()).isEqualTo(bbsId);
@@ -86,7 +84,7 @@ class BbsDAOImplTest {
     @DisplayName("게시글 수정")
     void updateByBbsId(){
 
-        Long bbsId = 2L;
+        Long bbsId = 22L;
         //수정전
         Bbs beforeUpdatingItem = bbsDAO.findByBbsId(bbsId);
         beforeUpdatingItem.setBcategory("B0102");

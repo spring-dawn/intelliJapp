@@ -1,6 +1,5 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
-import com.kh.app3_snapshot.domain.notice.Notice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -91,9 +90,9 @@ public class BbsDAOImpl implements BbsDAO {
     public Bbs findByBbsId(Long id) {
         StringBuffer sql = new StringBuffer();
 
-        sql.append( "select bbs_id, bcategory, title, email, nickname, hit, bcontent, pbbs_id, bgroup, STEP, bindent, status, cdate, udate " );
-        sql.append( "from bbs " );
-        sql.append( "where bbs_id = ? " );
+        sql.append( " select bbs_id, bcategory, title, email, nickname, hit, bcontent, pbbs_id, bgroup, STEP, bindent, status, cdate, udate " );
+        sql.append( " from bbs " );
+        sql.append( " where bbs_id = ? " );
 
         Bbs bbsItem = null;
         try {
@@ -228,7 +227,7 @@ public class BbsDAOImpl implements BbsDAO {
         sql.append(" update bbs ");
         sql.append(" set step = step + 1 ");
         sql.append(" where bgroup = ? ");
-        sql.append(" and bstep > ? ");
+        sql.append(" and step > ? ");
 
         int affectedRows = jdbcTemplate.update(sql.toString(), bbs.getBgroup(), bbs.getStep());
 

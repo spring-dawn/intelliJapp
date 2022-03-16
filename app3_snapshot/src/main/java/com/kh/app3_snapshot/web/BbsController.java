@@ -40,7 +40,17 @@ public class BbsController {
 //    model.addAttribute("addForm", new AddForm());
 //    return "bbs/addForm";
 //  }
-  public String addForm(@ModelAttribute AddForm addForm) {
+  public String addForm(
+          Model model,
+          HttpSession session) {
+
+    LoginMember loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+    AddForm addForm = new AddForm();
+    addForm.setEmail(loginMember.getEmail());
+    addForm.setNickname(loginMember.getNickname());
+    model.addAttribute("addForm", addForm);
+
     return "bbs/addForm";
   }
 
@@ -60,15 +70,14 @@ public class BbsController {
 //    bbs.setBcontent(addForm.getBcontent());
     BeanUtils.copyProperties(addForm, bbs);
 
-//    세션 가져오기
-    LoginMember loginMember = (LoginMember) session.getAttribute(SessionConst.LOGIN_MEMBER);
-//    세션 정보가 없으면 로그인 페이지로 이동.
+    //세션 가져오기
+    LoginMember loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+    //세션 정보가 없으면 로그인페이지로 이동
     if(loginMember == null){
       return "redirect:/login";
     }
 
-
-//    세션에서 이메일, 별칭 가져오기
+    //세션에서 이메일,별칭가져오기
     bbs.setEmail(loginMember.getEmail());
     bbs.setNickname(loginMember.getNickname());
 
@@ -93,9 +102,9 @@ public class BbsController {
     }
 
     model.addAttribute("list", partOfList);
+
     return "bbs/list";
   }
-
 
   //조회
   @GetMapping("/{id}")
@@ -112,7 +121,7 @@ public class BbsController {
 //    detailForm.setEmail(detailBbs.getEmail());
 //    detailForm.setNickname(detailBbs.getNickname());
 //    detailForm.setHit(detailBbs.getHit());
-    BeanUtils.copyProperties(detailBbs, detailForm);      //위의 코드와 같은 내용. 편리한 메소드.
+    BeanUtils.copyProperties(detailBbs, detailForm);
     model.addAttribute("detailForm", detailForm);
 
     return "bbs/detailForm";

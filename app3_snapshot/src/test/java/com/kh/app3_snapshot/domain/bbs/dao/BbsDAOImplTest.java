@@ -44,7 +44,7 @@ class BbsDAOImplTest {
         bbs.setNickname("테스터2");
         bbs.setBcontent("본문1-1");
 
-        bbsDAO.saverReply(pbbsId, bbs);
+        bbsDAO.saveReply(pbbsId, bbs);
     }
 
     @Test

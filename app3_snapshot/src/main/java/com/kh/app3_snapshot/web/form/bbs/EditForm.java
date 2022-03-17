@@ -8,7 +8,9 @@ import javax.validation.constraints.Size;
 
 //뷰의 입력값을 받아 올 폼(form.html) 객체 정의
 @Data
-public class AddForm {
+public class EditForm {
+
+  private Long bbsId;                     //수정할 게시글
 
   @NotBlank
   @Size(min=5, max = 11)
@@ -29,5 +31,7 @@ public class AddForm {
   @NotBlank
   @Size(min=5)
   private String bcontent;                //내용
-
+  
+  private int hit;                        //조회수
+  
 }

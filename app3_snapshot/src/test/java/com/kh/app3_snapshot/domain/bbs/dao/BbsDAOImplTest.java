@@ -35,7 +35,7 @@ class BbsDAOImplTest {
     @Test
     @DisplayName("답글 작성")
     void saverReply(){
-        Long pbbsId = 22L;
+        Long pbbsId = 8L;
 
         Bbs bbs = new Bbs();
         bbs.setBcategory("B0101");

@@ -51,7 +51,7 @@ public class BbsSVCImpl implements BbsSVC {
 
 //  답글
   @Override
-  public Long saverReply(Long pbbsId, Bbs replyBbs) {
+  public Long saveReply(Long pbbsId, Bbs replyBbs) {
     return bbsDAO.saveReply(pbbsId, replyBbs);
   }
 

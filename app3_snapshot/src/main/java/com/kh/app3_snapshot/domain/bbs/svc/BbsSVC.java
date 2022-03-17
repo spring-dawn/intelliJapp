@@ -41,7 +41,7 @@ public interface BbsSVC {
   int updateByBbsId(Long id,Bbs bbs);
 
   // 답글작성
-  Long saverReply(Long pbbsId, Bbs replyBbs);
+  Long saveReply(Long pbbsId, Bbs replyBbs);
 
   // 조회수
 //  int increaseHitCount(Long id);

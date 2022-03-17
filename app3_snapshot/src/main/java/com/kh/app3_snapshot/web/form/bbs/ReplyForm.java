@@ -6,9 +6,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-//뷰의 입력값을 받아 올 폼(form.html) 객체 정의
 @Data
-public class AddForm {
+public class ReplyForm {
 
   @NotBlank
   @Size(min=5, max = 11)
@@ -29,5 +28,7 @@ public class AddForm {
   @NotBlank
   @Size(min=5)
   private String bcontent;                //내용
+
+
 
 }

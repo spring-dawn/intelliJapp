@@ -3,19 +3,20 @@ package com.kh.app3_snapshot.web;
 import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
 import com.kh.app3_snapshot.domain.bbs.svc.BbsSVC;
 import com.kh.app3_snapshot.domain.common.CodeDAO;
-import com.kh.app3_snapshot.web.form.bbs.AddForm;
-import com.kh.app3_snapshot.web.form.bbs.DetailForm;
-import com.kh.app3_snapshot.web.form.bbs.ListForm;
+import com.kh.app3_snapshot.web.form.bbs.*;
 import com.kh.app3_snapshot.web.form.login.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class BbsController {
           Model model,
           HttpSession session) {
 
+//    세션에서 사용자 정보 가져와 작성 양식에 입력해주기
     LoginMember loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
     AddForm addForm = new AddForm();
@@ -57,10 +59,16 @@ public class BbsController {
   //작성처리
   @PostMapping("/add")
   public String add(
-          @ModelAttribute AddForm addForm,
+          @Valid @ModelAttribute AddForm addForm,
+          BindingResult bindingResult,      //폼객체에 바인딩 될 때 오류 내용이 저장되는 객체
           HttpSession session,
           RedirectAttributes redirectAttributes) {
     log.info("addForm={}",addForm);
+
+    if(bindingResult.hasErrors()){
+      log.info("add/bindingResult={}", bindingResult);
+      return "bbs/addForm";
+    }
 
     Bbs bbs = new Bbs();
 //    bbs.setBcategory(addForm.getBcategory());
@@ -129,32 +137,100 @@ public class BbsController {
 
   //삭제
   @GetMapping("/{id}/del")
-  public String del() {
+  public String del(@PathVariable Long id) {
+
+    bbsSvc.deleteByBbsId(id);
+
     return "redirect:/bbs";
+
   }
 
   //수정양식
   @GetMapping("/{id}/edit")
-  public String editForm() {
+  public String editForm(@PathVariable Long id, Model model) {
+//    수정할 게시글 찾기
+    Bbs bbs = bbsSvc.findByBbsId(id);
+
+//    수정 양식 객체 생성, 폼객체에 정의된 것과 같이 내용 복사, model 객체에 담기
+    EditForm editForm = new EditForm();
+    BeanUtils.copyProperties(bbs, editForm);
+    model.addAttribute("editForm", editForm);
+
     return "bbs/editForm";
   }
 
   //수정처리
   @PostMapping("/{id}/edit")
-  public String edit() {
+  public String edit(  @PathVariable Long id,
+                       @Valid @ModelAttribute EditForm editForm,
+                       BindingResult bindingResult,
+                       RedirectAttributes redirectAttributes) {
+
+    if(bindingResult.hasErrors()){
+      return "bbs/editForm";
+    }
+    Bbs bbs = new Bbs();
+    BeanUtils.copyProperties(editForm, bbs);
+
+    bbsSvc.updateByBbsId(id, bbs);
+
+      redirectAttributes.addAttribute("id", id);
     return "redirect:/bbs/{id}";
   }
 
+
   //답글작성양식
   @GetMapping("/{id}/reply")
-  public String replyForm() {
+  public String replyForm(@PathVariable Long id,
+                          Model model,HttpSession session) {
+    Bbs parentBbs = bbsSvc.findByBbsId(id);
+    ReplyForm replyForm = new ReplyForm();
+    replyForm.setBcategory(parentBbs.getBcategory());
+    replyForm.setTitle("답글:"+parentBbs.getTitle());
+
+    //세션에서 로그인정보 가져오기
+    LoginMember loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+    replyForm.setEmail(loginMember.getEmail());
+    replyForm.setNickname(loginMember.getNickname());
+
+    model.addAttribute("replyForm", replyForm);
     return "bbs/replyForm";
   }
 
   //답글작성처리
   @PostMapping("/{id}/reply")
-  public String reply(){
+  public String reply(
+      @PathVariable Long id,      //부모글의 bbsId
+      @Valid ReplyForm replyForm,
+      BindingResult bindingResult,
+      RedirectAttributes redirectAttributes
+  ){
+    if(bindingResult.hasErrors()){
+      return "bbs/replyForm";
+    }
 
+    Bbs replyBbs = new Bbs();
+    BeanUtils.copyProperties(replyForm, replyBbs);
+
+    //부모글의 bcategory,bbsId,bgroup,step,bindent 참조
+    appendInfoOfParentBbs(id, replyBbs);
+
+    //답글저장(return 답글번호)
+    Long replyBbsId = bbsSvc.saveReply(id, replyBbs);
+
+    redirectAttributes.addAttribute("id",replyBbsId);
     return "redirect:/bbs/{id}";
   }
+
+  //부모글의 bbsId,bgroup,step,bindent
+  private void appendInfoOfParentBbs(Long parentBbsId, Bbs replyBbs) {
+    Bbs parentBbs = bbsSvc.findByBbsId(parentBbsId);
+
+    replyBbs.setBcategory(parentBbs.getBcategory());
+    replyBbs.setPbbsId(parentBbs.getBbsId());
+    replyBbs.setBgroup(parentBbs.getBgroup());
+    replyBbs.setStep(parentBbs.getStep());
+    replyBbs.setBindent(parentBbs.getBindent());
+  }
+
 }

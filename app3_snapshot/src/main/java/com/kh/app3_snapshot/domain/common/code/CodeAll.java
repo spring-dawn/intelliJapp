@@ -1,4 +1,4 @@
-package com.kh.app3_snapshot.domain.common;
+package com.kh.app3_snapshot.domain.common.code;
 
 import lombok.Data;
 

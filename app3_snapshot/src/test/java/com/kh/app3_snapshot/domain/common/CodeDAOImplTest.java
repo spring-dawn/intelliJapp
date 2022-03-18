@@ -1,5 +1,7 @@
 package com.kh.app3_snapshot.domain.common;
 
+import com.kh.app3_snapshot.domain.common.code.CodeAll;
+import com.kh.app3_snapshot.domain.common.code.CodeDAO;
 import com.kh.app3_snapshot.web.Code;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -8,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest

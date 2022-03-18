@@ -1,16 +1,26 @@
 package com.kh.app3_snapshot.domain.bbs.svc;
 
 import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface BbsSVC {
+
   /**
    * 원글작성
    * @param bbs
    * @return 게시글 번호
    */
   Long saveOrigin(Bbs bbs);
+
+  /**
+   * 원글작성-첨부파일 있는경우
+   * @param bbs
+   * @param files 첨파일
+   * @return 게시글 번호
+   */
+  Long saveOrigin(Bbs bbs, List<MultipartFile> files);
 
   /**
    * 목록
@@ -40,14 +50,19 @@ public interface BbsSVC {
    */
   int updateByBbsId(Long id,Bbs bbs);
 
-  // 답글작성
-  Long saveReply(Long pbbsId, Bbs replyBbs);
 
-  // 조회수
-//  int increaseHitCount(Long id);
+  /**
+   * 답글작성
+   * @param pbbsId 부모글번호
+   * @param replyBbs 답글
+   * @return 답글번호
+   */
+  Long saveReply(Long pbbsId,Bbs replyBbs);
 
-  // 전체건수
+  /**
+   * 전체건수
+   * @return 게시글 전체건수
+   */
   int totalCount();
-
 
 }

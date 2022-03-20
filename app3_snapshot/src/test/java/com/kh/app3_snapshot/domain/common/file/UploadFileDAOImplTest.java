@@ -28,7 +28,7 @@ class UploadFileDAOImplTest {
 //        빈 객체에 값 설정
         uploadFile.setCode("F0101");
         uploadFile.setRid(2L);
-        uploadFile.setStore_filename("xxx-yy-zz.png");
+        uploadFile.setStore_finename("xxx-yy-zz.png");
         uploadFile.setUpload_filename("커피3.png");
         uploadFile.setFsize("200");
         uploadFile.setFtype("image/png");
@@ -48,7 +48,7 @@ class UploadFileDAOImplTest {
 
             uploadFile.setCode("F0101");
             uploadFile.setRid(2L);
-            uploadFile.setStore_filename("xxx-yy-zz.png");
+            uploadFile.setStore_finename("xxx-yy-zz.png");
             uploadFile.setUpload_filename("커피3.png");
             uploadFile.setFsize("200");
             uploadFile.setFtype("image/png");

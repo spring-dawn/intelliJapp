@@ -62,7 +62,7 @@ class BbsDAOImplTest {
     @Test
     @DisplayName("게시글 단건 조회")
     void findByBbsId() {
-        Long bbsId = 22L;
+        Long bbsId = 61L;
         Bbs findedBbsItem = bbsDAO.findByBbsId(bbsId);
         log.info("findedBbsItem={}",findedBbsItem);
         Assertions.assertThat(findedBbsItem.getBbsId()).isEqualTo(bbsId);
@@ -84,12 +84,12 @@ class BbsDAOImplTest {
     @DisplayName("게시글 수정")
     void updateByBbsId(){
 
-        Long bbsId = 22L;
+        Long bbsId = 61L;
         //수정전
         Bbs beforeUpdatingItem = bbsDAO.findByBbsId(bbsId);
         beforeUpdatingItem.setBcategory("B0102");
-        beforeUpdatingItem.setTitle("수정후 제목");
-        beforeUpdatingItem.setBcontent("수정후 본문");
+        beforeUpdatingItem.setTitle("수정 제목1");
+        beforeUpdatingItem.setBcontent("수정 본문1");
         bbsDAO.updateByBbsId(bbsId,beforeUpdatingItem);
 
         //수정후
@@ -109,11 +109,11 @@ class BbsDAOImplTest {
     @Test
     @DisplayName("조회수 증가")
     void increaseHitCount(){
-        Long bbsId = 1L;
+        Long bbsId = 61L;
 //        조회 전 조회수
         int beforeHitCount = bbsDAO.findByBbsId(bbsId).getHit();
 //        조회(클릭)
-        bbsDAO.increaseHitCount(1L);
+        bbsDAO.increaseHitCount(61L);
 //        조회 후 조회수
         int afterHitCount = bbsDAO.findByBbsId(bbsId).getHit();
 //        조회 후 조회수 - 조회 전 조회수 = 1

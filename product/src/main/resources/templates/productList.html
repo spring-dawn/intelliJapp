@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 페이지</title>
+
+  <style>
+    /* 윤곽선 */
+    /* * { outline: red 1px solid;} */
+    h3 {
+      text-align: center;
+    }
+
+    .content-wrap{
+      width: 750px; height: 550px;
+      margin: auto;
+      text-align: center;
+    }
+    main{
+      width: inherit; height: 400px;
+      box-sizing: border-box;
+    }
+
+    /* 그리드 적용 */
+    #header, #body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    #header{
+      border: 1px black solid;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    #body{overflow: hidden;}
+    #body > div { margin: 7px 5px;}
+
+    .btns{ 
+      margin-top: 20px;
+      display: flex;
+      justify-content: end;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <h3>Product</h3>
+  <hr>
+
+  <div class="content-wrap">
+
+    <main>
+      <div id="header">
+        <div>ID</div>
+        <div>상품명</div>
+      </div>
+      <div id="body" th:each="item : ${list}">
+        <!-- 등록상품 출력 위치. id와 이름만 출력 -->
+        <a href="" th:href="@{|/product/${item.productId}/detail|}" th:text="${item.productId}"></a>
+        <div th:text="${item.pname}" ></div>
+      </div>
+    </main>
+
+     <!-- 버튼 -->
+    <div class="btns">
+      <button type="button" id="addFormBtn">등록</button>
+    </div>
+
+  </div>
+
+
+  <script>
+    // 버튼에 리스너
+    addFormBtn.addEventListener('click', e=>{
+      console.log('등록');
+      location.href = 'product/add';
+    });
+
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세</title>
+</head>
+
+<body>
+    <h3>ProductDetail</h3>
+    <hr>
+
+    <form action="" th:object="${detailForm}">
+
+        <div>
+            <label for="productId">ID</label>
+            <input type="text" name="" id="productId" th:field="*{productId}" th:readonly="readonly">
+        </div>
+        <div>
+            <label for="pname">품명</label>
+            <input type="text" name="" id="pname" th:field="*{pname}" th:readonly="readonly">
+        </div>
+        <div>
+            <label for="pquantity">수량</label>
+            <input type="text" name="" id="pquantity" th:field="*{pquantity}" th:readonly="readonly">
+        </div>
+        <div>
+            <label for="pprice">가격</label>
+            <input type="text" name="" id="pprice" th:field="*{pprice}" th:readonly="readonly">
+        </div>
+        <div>
+            <button type="button" id="updateBtn">수정</button>
+            <button type="button" id="deleteBtn">삭제</button>
+            <button type="button" id="listBtn">목록으로</button>
+        </div>
+
+    </form>
+
+
+    <script>
+        // 경로상 매개값이 있는 경우엔(@PathVariable) url을 따옴표가 아닌 백틱으로 쓴다
+
+        //수정 양식으로.
+        updateBtn.addEventListener('click', e => {
+            location.href = `/product/${productId.value}/edit`;
+        });
+        
+        //삭제
+        deleteBtn.addEventListener('click', e => {
+            // 삭제는 작업 처리 후 홈으로 돌아간다
+            if( confirm('삭제하시겠습니까?') ){
+                location.href = `/product/${productId.value}/del`;
+            }
+             return;   
+        });
+        
+        // 홈화면 돌아가는 버튼
+        listBtn.addEventListener('click', e => {
+            console.log('홈으로');
+            location.href = '/product';
+        });
+
+    </script>
+
+</body>
+
+</html>

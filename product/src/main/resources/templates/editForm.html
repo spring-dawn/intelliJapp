@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 정보 수정</title>
+</head>
+
+<body>
+    <h3>EditProduct</h3>
+    <hr>
+<!--    통신 메소드 착각만으로 이틀 중의 절반은 날려버린 것 같다-->
+    <form action="" th:action id="editForm" method="post" th:object="${editForm}">
+
+        <!-- 변경 대상 id. 필요하지만 사용자가 건드리지 못하게 hidden 으로 작성 -->
+        <input type="hidden" id="productId" th:field="*{productId}">
+        <!-- 변경할 부분 -->
+        <div>
+            <label for="pname">품명</label>
+            <input type="text" name="" id="pname" th:field="*{pname}">
+        </div>
+        <div>
+            <label for="pquantity">수량</label>
+            <input type="text" name="" id="pquantity" th:field="*{pquantity}">
+        </div>
+        <div>
+            <label for="pprice">가격</label>
+            <input type="text" name="" id="pprice" th:field="*{pprice}">
+        </div>
+
+        <div class="">
+            <button type="button" id="saveBtn">저장</button>
+            <button type="button" id="notSaveBtn">취소</button>
+        </div>
+    </form>
+
+
+    <script>
+        // 입력값=폼, id값 
+        const fm = document.getElementById('editForm');
+        const productId = fm.productId.value;
+        
+        // 수정내용 반영
+        saveBtn.addEventListener('click', e => {
+            const url = `/product/${productId}/edit`
+
+            fm.action = url;
+            fm.submit();
+        });
+
+        // 취소. 상세로 되돌아감.
+        notSaveBtn.addEventListener('click', e => {
+            location.href = `/product/${productId}/detail`;
+        });
+
+    </script>
+
+
+
+
+</body>
+
+</html>

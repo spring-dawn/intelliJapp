@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 등록</title>
+</head>
+
+<body>
+    <h3>Add Product</h3>
+    <hr>
+
+    <!-- 등록할 입력창은 form으로 받고 post 지정한다, 타임리프로 폼객체 바인딩 -->
+    <!-- 타임리프 문법은 항상 th:blar="{}" 로 돼있으니까 유의 -->
+    <form action="" id="saveForm" method="post" th:object="${addForm}">
+
+        <div>
+            <label for="pname">품명</label>
+            <input type="text" name="" id="pname" th:field="*{pname}">
+        </div>
+        <div>
+            <label for="pquantity">수량</label>
+            <input type="text" name="" id="pquantity" th:field="*{pquantity}">
+        </div>
+        <div>
+            <label for="pprice">가격</label>
+            <input type="text" name="" id="pprice" th:field="*{pprice}">
+        </div>
+
+        <div class="">
+            <button type="button" id="saveBtn">등록</button>
+            <button type="button" id="notSaveBtn">취소</button>
+        </div>
+
+    </form>
+
+    <script>
+        // 등록 상품의 상세 페이지로 이동
+        saveBtn.addEventListener('click', e=>{
+            console.log('등록');
+            saveForm.submit();
+        });
+
+        // 등록 취소. 목록으로 되돌아감.
+        notSaveBtn.addEventListener('click', e=>{
+            console.log('취소');
+            location.href = "/product";
+        });
+
+
+    </script>
+
+
+</body>
+
+</html>

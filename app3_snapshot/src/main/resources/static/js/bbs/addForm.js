@@ -1,11 +1,11 @@
 'use strict';
-
-//목록으로
-    listBtn.addEventListener("click",e=>{
-      location.href = "/bbs";
-    });
-
-//작성 > 등록
-     writeBtn.addEventListener("click",e=>{
-        writeForm.submit();
-        });
+//등록
+const $writeBtn = document.getElementById('writeBtn');
+$writeBtn?.addEventListener("click", e=>{
+  writeForm.submit();
+});
+//목록
+const $listBtn = document.getElementById('listBtn');
+$listBtn?.addEventListener("click",e=>{
+  location.href = "/bbs";
+});

@@ -3,8 +3,8 @@
       xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragment/main::main(
         ~{::title},       <!--/* title */-->
-        ~{::link},                  <!--/* styles */-->
-        ~{::script},                <!--/* scripts */-->
+        ~{::link},              <!--/* styles */-->
+        ~{::script},              <!--/* scripts */-->
         ~{},       <!--/* style */-->
         ~{},      <!--/* script */-->
         ~{::.upm-inner},  <!--/* upm */-->
@@ -13,18 +13,14 @@
         ~{::main},        <!--/* main */-->
         _                 <!--/* footer default*/-->
       )}">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 보기</title>
-
     <link rel="stylesheet" href="" th:href="@{/css/bbs/detailForm.css}">
     <script defer src="" th:src="@{/js/bbs/detailForm.js}"></script>
-
 </head>
-
 <body>
 <div class="global-wrap">
     <div class="upm">
@@ -45,7 +41,6 @@
     <div class="main">
         <div class="inner main-inner">
             <main>
-                <th:block th:text="|${email}/${nickname}|"></th:block>
                 <div class="bbs-wrap">
                     <div class="bbs-title"><h3>게시글 보기</h3></div>
                     <div class="class-body">
@@ -68,21 +63,30 @@
                                 <div><lable>제목</lable></div>
                                 <div><input type="text" name="" id="" class="w100" th:field="*{title}" th:readonly="readonly"></div>
                                 <div><lable>작성자</lable></div>
-                                <div><input type="text" name="" id="" class="w100" th:field="*{nickname}" th:readonly="readonly"></div>
+                                <div><span th:text="|*{nickname} ( *{email} )|"></span></div>
                                 <div><lable>내용</lable></div>
                                 <div><textarea name="" id="" rows="10" class="w100" th:field="*{bcontent}" th:readonly="readonly"></textarea></div>
                             </div>
                             <div class="bbs-btngrp">
                                 <button type="button" id="replyBtn">답글</button>
-<!--                                글작성자와 세션아이디 체크 결과가 동일한 경우만 수행 가능-->
+                                <!--글작성자와 세션아이디체크해서 동이한경우만 수행-->
                                 <th:block th:if="*{email} eq ${s_email}">
-                                <button type="button" id="editBtn">수정</button>
-                                <button type="button" id="delBtn">삭제</button>
+                                    <button type="button" id="editBtn">수정</button>
+                                    <button type="button" id="delBtn">삭제</button>
                                 </th:block>
+                                <!-------------------------------------------->
                                 <button type="button" id="listBtn">목록</button>
                             </div>
                             <div class="bbs-attach">
-                                첨부파일
+                                <div><label>첨부</label></div>
+                                <div>
+                                    <div th:each="file : ${attachFiles}">
+                                        <a href="" th:href="@{|/attach/down/${file.uploadfileId}|}" th:text="${file.upload_filename}"></a>
+                                        <th:block th:if="${#strings.contains(file.ftype,'image')}" >
+                                            <img th:src="@{|/attach/view/${file.uploadfileId}|}" th:width="30px" th:height="30px">
+                                        </th:block>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -95,9 +99,7 @@
                     footer
                 </footer>
             </div>
-            </div>
         </div>
     </div>
-
 </body>
 </html>

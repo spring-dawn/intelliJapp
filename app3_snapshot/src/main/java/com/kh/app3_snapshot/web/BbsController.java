@@ -3,6 +3,8 @@ package com.kh.app3_snapshot.web;
 import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
 import com.kh.app3_snapshot.domain.bbs.svc.BbsSVC;
 import com.kh.app3_snapshot.domain.common.code.CodeDAO;
+import com.kh.app3_snapshot.domain.common.file.UploadFile;
+import com.kh.app3_snapshot.domain.common.file.svc.UploadFileSVC;
 import com.kh.app3_snapshot.web.form.bbs.*;
 import com.kh.app3_snapshot.web.form.login.LoginMember;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.List;
 public class BbsController {
   private final BbsSVC bbsSvc;
   private final CodeDAO codeDAO;
+  private final UploadFileSVC uploadFileSVC;
 
   //게시판 코드,디코드 가져오기
   @ModelAttribute("classifier")
@@ -84,7 +87,9 @@ public class BbsController {
     bbs.setEmail(loginMember.getEmail());
     bbs.setNickname(loginMember.getNickname());
 
+
     Long originId = 0l;
+    //파일첨부유무
     if(addForm.getFiles() == null) {
       originId = bbsSvc.saveOrigin(bbs);
     }else{
@@ -121,32 +126,24 @@ public class BbsController {
           Model model) {
 
     Bbs detailBbs = bbsSvc.findByBbsId(id);
-
     DetailForm detailForm = new DetailForm();
-//    detailForm.setBcategory(detailBbs.getBcategory());
-//    detailForm.setTitle(detailBbs.getTitle());
-//    detailForm.setBcontent(detailBbs.getBcontent());
-//    detailForm.setEmail(detailBbs.getEmail());
-//    detailForm.setNickname(detailBbs.getNickname());
-//    detailForm.setHit(detailBbs.getHit());
     BeanUtils.copyProperties(detailBbs, detailForm);
     model.addAttribute("detailForm", detailForm);
+
+    //첨부조회
+    List<UploadFile> attachFiles = uploadFileSVC.getFilesByCodeWithRid(detailBbs.getBcategory(), detailBbs.getBbsId());
+    if(attachFiles.size() > 0){
+      log.info("attachFiles={}",attachFiles);
+      model.addAttribute("attachFiles", attachFiles);
+    }
 
     return "bbs/detailForm";
   }
 
-//  첨부파일 조회
-
-
-
-
-
-
-
-
   //삭제
   @GetMapping("/{id}/del")
-  public String del(@PathVariable Long id) {
+  public String del(
+          @PathVariable Long id) {
 
     bbsSvc.deleteByBbsId(id);
 
@@ -163,7 +160,12 @@ public class BbsController {
     BeanUtils.copyProperties(bbs,editForm);
     model.addAttribute("editForm", editForm);
 
-    log.info("editForm={}",editForm);
+    //첨부조회
+    List<UploadFile> attachFiles = uploadFileSVC.getFilesByCodeWithRid(bbs.getBcategory(), bbs.getBbsId());
+    if(attachFiles.size() > 0){
+      log.info("attachFiles={}",attachFiles);
+      model.addAttribute("attachFiles", attachFiles);
+    }
 
     return "bbs/editForm";
   }
@@ -184,7 +186,13 @@ public class BbsController {
     BeanUtils.copyProperties(editForm, bbs);
     bbsSvc.updateByBbsId(id,bbs);
 
+    if(editForm.getFiles() == null) {
+      bbsSvc.updateByBbsId(id, bbs);
+    }else{
+      bbsSvc.updateByBbsId(id, bbs, editForm.getFiles());
+    }
     redirectAttributes.addAttribute("id",id);
+
     return "redirect:/bbs/{id}";
   }
 

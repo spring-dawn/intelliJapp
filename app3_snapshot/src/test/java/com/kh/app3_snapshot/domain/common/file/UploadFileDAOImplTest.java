@@ -10,54 +10,43 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
 @Slf4j
+@SpringBootTest
 class UploadFileDAOImplTest {
 
-//    D.I
     @Autowired
     private UploadFileDAO uploadFileDAO;
 
-
     @Test
-    @DisplayName("단일 업로드")
+    @DisplayName("업로드-단건")
     void addFile() {
-//        테스트용 빈 객체 생성
         UploadFile uploadFile = new UploadFile();
 
-//        빈 객체에 값 설정
         uploadFile.setCode("F0101");
-        uploadFile.setRid(2L);
-        uploadFile.setStore_finename("xxx-yy-zz.png");
-        uploadFile.setUpload_filename("커피3.png");
+        uploadFile.setRid(88l);
+        uploadFile.setStore_filename("xxx-yyy-zz2.png");
+        uploadFile.setUpload_filename("커피2.png");
         uploadFile.setFsize("200");
         uploadFile.setFtype("image/png");
 
-//        집어넣고 테스트
         Long fid = uploadFileDAO.addFile(uploadFile);
-        log.info("fid={}", fid);
-
-
+        log.info("fid={}",fid);
     }
 
     @Test
+    @DisplayName("업로드-여러건")
     void testAddFile() {
         List<UploadFile> list = new ArrayList<>();
-        for(int i = 0; i<10; i++){
+        for(int i=0; i<10; i++){
             UploadFile uploadFile = new UploadFile();
-
             uploadFile.setCode("F0101");
-            uploadFile.setRid(2L);
-            uploadFile.setStore_finename("xxx-yy-zz.png");
-            uploadFile.setUpload_filename("커피3.png");
+            uploadFile.setRid(88l);
+            uploadFile.setStore_filename("xxx-yyy-zz2.png");
+            uploadFile.setUpload_filename("커피2.png");
             uploadFile.setFsize("200");
             uploadFile.setFtype("image/png");
-
             list.add(uploadFile);
         }
         uploadFileDAO.addFile(list);
     }
-
-
-
 }

@@ -135,6 +135,15 @@ public class BbsController {
     return "bbs/detailForm";
   }
 
+//  첨부파일 조회
+
+
+
+
+
+
+
+
   //삭제
   @GetMapping("/{id}/del")
   public String del(@PathVariable Long id) {

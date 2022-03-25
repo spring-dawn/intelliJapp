@@ -20,8 +20,6 @@ public class BbsSVCImpl implements BbsSVC {
   private final BbsDAO bbsDAO;
   private final UploadFileSVC uploadFileSVC;
 
-  //private String CODE = "F0101";
-
   //원글
   @Override
   public Long saveOrigin(Bbs bbs) {
@@ -45,6 +43,16 @@ public class BbsSVCImpl implements BbsSVC {
   @Override
   public List<Bbs> findAll() {
     return bbsDAO.findAll();
+  }
+
+  @Override
+  public List<Bbs> findAll(int startRec, int endRec) {
+    return bbsDAO.findAll(startRec,endRec);
+  }
+
+  @Override
+  public List<Bbs> findAll(String category, int startRec, int endRec) {
+    return bbsDAO.findAll(category,startRec,endRec);
   }
 
   //상세조회
@@ -97,5 +105,10 @@ public class BbsSVCImpl implements BbsSVC {
   @Override
   public int totalCount() {
     return bbsDAO.totalCount();
+  }
+
+  @Override
+  public int totalCount(String bcategory) {
+    return bbsDAO.totalCount(bcategory);
   }
 }

@@ -1,5 +1,8 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
+import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
+import com.kh.app3_snapshot.domain.bbs.dao.BbsDAO;
+import com.kh.app3_snapshot.domain.bbs.dao.BbsFilterCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +12,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -76,6 +80,35 @@ public class BbsDAOImpl implements BbsDAO {
         return list;
     }
 
+    //카테고리별 목록
+    @Override
+    public List<Bbs> findAll(String category) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT ");
+        sql.append("  bbs_id, ");
+        sql.append("  bcategory, ");
+        sql.append("  title, ");
+        sql.append("  email, ");
+        sql.append("  nickname, ");
+        sql.append("  hit, ");
+        sql.append("  bcontent, ");
+        sql.append("  pbbs_id, ");
+        sql.append("  bgroup, ");
+        sql.append("  step, ");
+        sql.append("  bindent, ");
+        sql.append("  status, ");
+        sql.append("  cdate, ");
+        sql.append("  udate ");
+        sql.append("FROM ");
+        sql.append("  bbs ");
+        sql.append("WHERE bcategory = ? ");
+        sql.append("Order by bgroup desc, step asc ");
+
+        List<Bbs> list = jdbcTemplate.query(sql.toString(), new BeanPropertyRowMapper<>(Bbs.class),category);
+
+        return list;
+    }
+
     @Override
     public List<Bbs> findAll(int startRec, int endRec) {
         StringBuffer sql = new StringBuffer();
@@ -97,14 +130,13 @@ public class BbsDAOImpl implements BbsDAO {
         sql.append("    status, ");
         sql.append("    cdate, ");
         sql.append("    udate ");
-        sql.append("    FROM ");
-        sql.append("    bbs) t1 ");
+        sql.append("    FROM bbs) t1 ");
         sql.append("where t1.no between ? and ? ");
 
         List<Bbs> list = jdbcTemplate.query(
-                sql.toString(),
-                new BeanPropertyRowMapper<>(Bbs.class),
-                startRec, endRec
+            sql.toString(),
+            new BeanPropertyRowMapper<>(Bbs.class),
+            startRec, endRec
         );
         return list;
     }
@@ -135,38 +167,64 @@ public class BbsDAOImpl implements BbsDAO {
         sql.append("where t1.no between ? and ? ");
 
         List<Bbs> list = jdbcTemplate.query(
-                sql.toString(),
-                new BeanPropertyRowMapper<>(Bbs.class),
-                category, startRec, endRec
+            sql.toString(),
+            new BeanPropertyRowMapper<>(Bbs.class),
+            category, startRec, endRec
         );
         return list;
     }
 
-    //카테고리별 목록
+    //검색
     @Override
-    public List<Bbs> findAll(String category) {
+    public List<Bbs> findAll(BbsFilterCondition filterCondition) {
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT ");
-        sql.append("  bbs_id, ");
-        sql.append("  bcategory, ");
-        sql.append("  title, ");
-        sql.append("  email, ");
-        sql.append("  nickname, ");
-        sql.append("  hit, ");
-        sql.append("  bcontent, ");
-        sql.append("  pbbs_id, ");
-        sql.append("  bgroup, ");
-        sql.append("  step, ");
-        sql.append("  bindent, ");
-        sql.append("  status, ");
-        sql.append("  cdate, ");
-        sql.append("  udate ");
-        sql.append("FROM ");
-        sql.append("  bbs ");
-        sql.append("WHERE bcategory = ? ");
-        sql.append("Order by bgroup desc, step asc ");
+        sql.append("select t1.* ");
+        sql.append("from( ");
+        sql.append("    SELECT  ROW_NUMBER() OVER (ORDER BY bgroup DESC, step ASC) no, ");
+        sql.append("            bbs_id, ");
+        sql.append("            bcategory, ");
+        sql.append("            title, ");
+        sql.append("            email, ");
+        sql.append("            nickname, ");
+        sql.append("            hit, ");
+        sql.append("            bcontent, ");
+        sql.append("            pbbs_id, ");
+        sql.append("            bgroup, ");
+        sql.append("            step, ");
+        sql.append("            bindent, ");
+        sql.append("            status, ");
+        sql.append("            cdate, ");
+        sql.append("            udate ");
+        sql.append("      FROM bbs ");
+        sql.append("     WHERE ");
 
-        List<Bbs> list = jdbcTemplate.query(sql.toString(), new BeanPropertyRowMapper<>(Bbs.class),category);
+        //분류
+        sql = dynamicQuery(filterCondition, sql);
+
+        sql.append(") t1 ");
+        sql.append("where t1.no between ? and ? ");
+
+
+        List<Bbs> list = null;
+
+        //게시판 전체
+        if(StringUtils.isEmpty(filterCondition.getCategory())){
+            list = jdbcTemplate.query(
+                sql.toString(),
+                new BeanPropertyRowMapper<>(Bbs.class),
+                filterCondition.getStartRec(),
+                filterCondition.getEndRec()
+            );
+            //게시판 분류
+        }else{
+            list = jdbcTemplate.query(
+                sql.toString(),
+                new BeanPropertyRowMapper<>(Bbs.class),
+                filterCondition.getCategory(),
+                filterCondition.getStartRec(),
+                filterCondition.getEndRec()
+            );
+        }
 
         return list;
     }
@@ -197,9 +255,9 @@ public class BbsDAOImpl implements BbsDAO {
         Bbs bbsItem = null;
         try {
             bbsItem = jdbcTemplate.queryForObject(
-                    sql.toString(),
-                    new BeanPropertyRowMapper<>(Bbs.class),
-                    id);
+                sql.toString(),
+                new BeanPropertyRowMapper<>(Bbs.class),
+                id);
         }catch (Exception e){ // 1건을 못찾으면
             bbsItem = null;
         }
@@ -232,11 +290,11 @@ public class BbsDAOImpl implements BbsDAO {
         sql.append(" WHERE bbs_id = ? ");
 
         int updatedItemCount = jdbcTemplate.update(
-                sql.toString(),
-                bbs.getBcategory(),
-                bbs.getTitle(),
-                bbs.getBcontent(),
-                id
+            sql.toString(),
+            bbs.getBcategory(),
+            bbs.getTitle(),
+            bbs.getBcontent(),
+            id
         );
 
         return updatedItemCount;
@@ -346,5 +404,76 @@ public class BbsDAOImpl implements BbsDAO {
         Integer cnt = jdbcTemplate.queryForObject(sql, Integer.class, bcategory);
 
         return cnt;
+    }
+
+    @Override
+    public int totalCount(BbsFilterCondition filterCondition) {
+
+        StringBuffer sql = new StringBuffer();
+
+        sql.append("select count(*) ");
+        sql.append("  from bbs  ");
+        sql.append(" where  ");
+
+        sql = dynamicQuery(filterCondition, sql);
+
+        Integer cnt = 0;
+        //게시판 전체 검색 건수
+        if(StringUtils.isEmpty(filterCondition.getCategory())) {
+            cnt = jdbcTemplate.queryForObject(
+                sql.toString(), Integer.class,
+                filterCondition.getSearchType(),
+                filterCondition.getKeyword()
+            );
+            //게시판 분류별 검색 건수
+        }else{
+            cnt = jdbcTemplate.queryForObject(
+                sql.toString(), Integer.class,
+                filterCondition.getCategory(),
+                filterCondition.getSearchType(),
+                filterCondition.getKeyword()
+            );
+        }
+
+        return cnt;
+    }
+
+    private StringBuffer dynamicQuery(BbsFilterCondition filterCondition, StringBuffer sql) {
+        //분류
+        if(StringUtils.isEmpty(filterCondition.getCategory())){
+
+        }else{
+            sql.append("       bcategory = ? ");
+        }
+
+        //분류,검색유형,검색어 존재
+        if(!StringUtils.isEmpty(filterCondition.getCategory()) &&
+            !StringUtils.isEmpty(filterCondition.getSearchType()) &&
+            !StringUtils.isEmpty(filterCondition.getKeyword())){
+
+            sql.append(" AND ");
+        }
+
+        //검색유형
+        switch (filterCondition.getSearchType()){
+            case "TC":  //제목 + 내용
+                sql.append("    (  title    like '%"+ filterCondition.getKeyword()+"%' ");
+                sql.append("    or bcontent like '%"+ filterCondition.getKeyword()+"%' )");
+                break;
+            case "T":   //제목
+                sql.append("       title    like '%"+ filterCondition.getKeyword()+"%' ");
+                break;
+            case "C":   //내용
+                sql.append("       bcontent like '%"+ filterCondition.getKeyword()+"%' ");
+                break;
+            case "E":   //아이디(이메일)
+                sql.append("       email    like '%"+ filterCondition.getKeyword()+"%' ");
+                break;
+            case "N":   //별칭
+                sql.append("       nickname like '%"+ filterCondition.getKeyword()+"%' ");
+                break;
+            default:
+        }
+        return sql;
     }
 }

@@ -2,14 +2,25 @@ package com.kh.app3_snapshot.domain.bbs.svc;
 
 import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
 import com.kh.app3_snapshot.domain.bbs.dao.BbsDAO;
+import com.kh.app3_snapshot.domain.bbs.dao.BbsFilterCondition;
+import com.kh.app3_snapshot.domain.common.file.UploadFile;
+import com.kh.app3_snapshot.domain.common.file.dao.UploadFileDAO;
 import com.kh.app3_snapshot.domain.common.file.svc.UploadFileSVC;
+import com.kh.app3_snapshot.domain.common.paging.RecordCriteria;
+import com.kh.app3_snapshot.domain.bbs.svc.BbsSVC;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -53,6 +64,11 @@ public class BbsSVCImpl implements BbsSVC {
   @Override
   public List<Bbs> findAll(String category, int startRec, int endRec) {
     return bbsDAO.findAll(category,startRec,endRec);
+  }
+
+  @Override
+  public List<Bbs> findAll(BbsFilterCondition filterCondition) {
+    return bbsDAO.findAll(filterCondition);
   }
 
   //상세조회
@@ -110,5 +126,10 @@ public class BbsSVCImpl implements BbsSVC {
   @Override
   public int totalCount(String bcategory) {
     return bbsDAO.totalCount(bcategory);
+  }
+
+  @Override
+  public int totalCount(BbsFilterCondition filterCondition) {
+    return bbsDAO.totalCount(filterCondition);
   }
 }

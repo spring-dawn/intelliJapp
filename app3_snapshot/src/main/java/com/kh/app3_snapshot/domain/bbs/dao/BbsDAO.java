@@ -1,5 +1,8 @@
 package com.kh.app3_snapshot.domain.bbs.dao;
 
+import com.kh.app3_snapshot.domain.bbs.dao.Bbs;
+import com.kh.app3_snapshot.domain.bbs.dao.BbsFilterCondition;
+
 import java.util.List;
 
 public interface BbsDAO {
@@ -22,6 +25,13 @@ public interface BbsDAO {
     List<Bbs>  findAll(String category,int startRec, int endRec);
 
     /**
+     * 검색
+     * @param filterCondition 분류,시작레코드번호,종료레코드번호,검색유형,검색어
+     * @return
+     */
+    List<Bbs>  findAll(BbsFilterCondition filterCondition);
+
+    /**
      * 상세 조회
      * @param id 게시글번호
      * @return
@@ -41,7 +51,7 @@ public interface BbsDAO {
      * @param bbs 수정내용
      * @return 수정건수
      */
-    int updateByBbsId(Long id,Bbs bbs);
+    int updateByBbsId(Long id, Bbs bbs);
 
 
     /**
@@ -50,7 +60,7 @@ public interface BbsDAO {
      * @param replyBbs 답글
      * @return 답글번호
      */
-    Long saveReply(Long pbbsId, Bbs replyBbs);
+    Long saveReply(Long pbbsId,Bbs replyBbs);
 
     /**
      * 조회수증가
@@ -65,5 +75,6 @@ public interface BbsDAO {
      */
     int totalCount();
     int totalCount(String bcategory);
+    int totalCount(BbsFilterCondition filterCondition);
 
 }

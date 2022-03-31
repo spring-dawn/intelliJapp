@@ -70,11 +70,15 @@ public interface BbsDAO {
     int increaseHitCount(Long id);
 
     /**
-     * 전체건수
+     * 전체 게시물 개수
      * @return 게시글 전체건수
      */
     int totalCount();
+
+//    카테고리별 개수
     int totalCount(String bcategory);
+
+//    검색 결과 도출에 필요한 페이지 계산
     int totalCount(BbsFilterCondition filterCondition);
 
 }

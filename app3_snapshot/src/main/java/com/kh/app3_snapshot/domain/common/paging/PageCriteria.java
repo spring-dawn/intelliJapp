@@ -1,8 +1,13 @@
 package com.kh.app3_snapshot.domain.common.paging;
 
+import com.kh.app3_snapshot.domain.common.paging.RecordCriteria;
+import lombok.ToString;
+import org.springframework.stereotype.Component;
+
 /**
  * 페이징 계산
  */
+@ToString
 public class PageCriteria {
     private RecordCriteria rc;							//요청페이지, 요청페이지에 보여줄 레코드수
     private final int PAGE_COUNT_PER_PAGE;  //요청페이지에 보여줄 페이지수
@@ -54,14 +59,17 @@ public class PageCriteria {
         this.calculatePaging();
     }
 
+    //시작페이지
     public int getStartPage() {
         return startPage;
     }
 
+    //종료페이지
     public int getEndPage() {
         return endPage;
     }
 
+    //최종페이지
     public int getFinalEndPage() {
         return finalEndPage;
     }

@@ -32,3 +32,6 @@
       display:flex;
       justify-content: flex-end;
     }
+
+     /* 본문 내 첨부된 미디어의 주소 노출 숨기기 */
+      #bcontent{ display: none;}

@@ -74,6 +74,7 @@ public interface BbsSVC {
    * @return 답글번호
    */
   Long saveReply(Long pbbsId,Bbs replyBbs);
+  Long saveReply(Long pbbsId,Bbs replyBbs, List<MultipartFile> files);
 
   /**
    * 전체건수

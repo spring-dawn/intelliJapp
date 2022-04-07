@@ -189,3 +189,31 @@ alter table uploadfile modify ftype constraint uploadfile_ftype_nn not null;
 --시퀀스
 create sequence uploadfile_uploadfile_id_seq;
 
+<<<<<<< HEAD
+=======
+
+
+--페이징에 필요한 sql.
+select 
+    ROW_NUMBER() OVER (ORDER BY member_id),
+    email,
+    nickname
+from member;
+
+--식별자가 인식이 안 돼서 서브쿼리로 뺌
+select t1.no "번호", t1.email "이메일", t1.nickname "별칭"
+from(
+    select 
+        ROW_NUMBER() OVER (ORDER BY member_id) no,
+        email,
+        nickname
+    from member)t1
+    where t1.no between 2 and 4;
+
+
+
+
+
+
+
+>>>>>>> 207e0b11ea01003a38e3d1110eb2b3eb17c0e35c

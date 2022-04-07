@@ -21,3 +21,8 @@
       display:flex;
       justify-content: flex-end;
     }
+
+/* check editor style 지정 */
+    #bcontent{display: none;}
+    .bbs-wrap .ck-editor__editable{ min-height: 20rem; }
+

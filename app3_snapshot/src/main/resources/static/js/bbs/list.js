@@ -4,6 +4,7 @@ const category = ($bbs?.dataset.code)? $bbs.dataset.code : '';
 
 const $writeBtn = document.getElementById('writeBtn');
 $writeBtn?.addEventListener("click", e=>{
+//    console.log(category);
   const url = `/bbs/add?category=${category}`
   location.href= url;   // get /bbs/add
 });

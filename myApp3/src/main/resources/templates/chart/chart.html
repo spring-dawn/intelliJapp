@@ -62,50 +62,6 @@
         );
 
 
-        // ajax
-        const url = 'http://192.168.168.103:9080';
-        fetch(url, {
-            method: 'GET',
-        }).then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-
-            // data 읽어오기
-
-
-
-
-
-
-            
-
-         // url은 사용 기기에 따라 변경 주의. 1은 집, 2는 교육장.
-    // const url1 = 'http://192.168.168.103:5500';
-    // const url2 = 'http://192.168.0.171:5500';
-
-    // fetch(url2,{
-    //     method:'GET',
-    // }).then(res => res.json())
-    //   .then(res => console.log(res))
-    //   .catch(err => console.log(err));
-
-
-    // // dataset[]으로 속성을 읽어올 수 있다.
-    // for(let i=0; i<=Object.keys(data).length; i++){
-    //     if( $btnWhere === Object.keys(data)[i] ){
-    //         let searchingCity = Object.keys(data)[i];
-
-    //         let html ='';
-    //         data[searchingCity].forEach(ele => {
-    //             html +=
-    //             `<span><input type="radio" class="subChk" name="subChk" value="${ele.sub}">${ele.sub}</span>`
-    //         });
-    //         subBox.innerHTML = html;
-    //     }
-    // }
-
-
-
 
     </script>
 </body>

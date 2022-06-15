@@ -20,8 +20,7 @@ public class ChartDAOImpl implements ChartDAO{
         String sql = " select count(item), manager from chart where cdate like '22%' group by manager ";
 
         List<Chart> result = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Chart.class));
-        return result;
-    }
+        return result;    }
 
 
 

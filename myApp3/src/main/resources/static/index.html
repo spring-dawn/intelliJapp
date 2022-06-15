@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +15,60 @@
         <button type="button">회원가입</button>
         <button type="button">로그인</button>
         <button type="button">회원탈퇴</button>
+        <a href="" th:href="@{/download/excel}" download><button type="button" id="excel">엑셀</button></a>
         <button type="button"><a href="/chart">차트</a></button>
     </p>
 
+    <script>
+        // url
+        location.href = `
+                            ${window.location.pathname}
+                            ?task=select
+                            &mode=makeExcelFile
+                            &data%5Bmode%5D=list
+                            &data%5B%5D=
+                            &data%5BBIZ_STATUS%5D=ongoing${BIZ_STATUS}
+                            &data%5BTASK_STATUS%5D=all${TASK_STATUS}
+                            &data%5BTASK_UNIT%5D=biz${TASK_UNIT}
+                            &data%5BDEPT_CD%5D=all${DEPT_CD}
+                            &data%5BMANAGER_ID_LIST%5D=${MANAGER_ID_LIST}
+                            &data%5BBIZ_YEAR%5D=2022${BIZ_YEAR}
+                            &data%5BBIZ_LIST%5D=${BIZ_LIST}
+                                                            `
+
+
+        // 회사 쪽 코드
+        // 사업현황 엑셀 파일 생성 > 다운로드
+        $('body').on('click', '#btnExcelDownload', function () {
+            // console.log('확인');
+
+            // 1) 엑셀 재료인 selectList 쿼리 결과를 요청 > 응답 
+            $.ajax({
+                type: "GET",
+                url: window.location.pathname,
+                data: {
+                    task: "select",
+                    mode: "testExcel",
+                    data: elem2Obj(page_prop.$search_form)    //필터링 매개값
+                }
+            }).done(function (data) {
+                showToastI("로컬 파일을 다운 받았습니다.");
+
+                // 2) 통신 성공하면 다운로드가 따로 실행. url 요청은 CommonHandler 쪽으로 들어간다. ajax와 별도 요청되는 현상.
+                // let params = new URLSearchParams(elem2Obj(page_prop.$search_form));
+                location.href = `${window.location.pathname}?task=select&mode=makeExcelFile&data%5Bmode%5D=list&data%5B%5D=&data%5BBIZ_STATUS%5D=ongoing&data%5BTASK_STATUS%5D=all&data%5BTASK_UNIT%5D=biz&data%5BDEPT_CD%5D=all&data%5BMANAGER_ID_LIST%5D=&data%5BBIZ_YEAR%5D=2022&data%5BBIZ_LIST%5D=`;
+
+            }).fail(function (data) {
+                showToastE("통신에 문제가 있습니다.");
+            });
+
+
+        });
+
+    </script>
+
+
 
 </body>
+
 </html>
